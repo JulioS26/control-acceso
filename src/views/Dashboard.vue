@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-row class="centrado">
+      <v-row class="centrado">
       <v-col cols="12" lg="3" class="texto-hover" v-for="opcion of opciones" :key="opcion.id">
         
         <v-card class=" mx-auto v-card-w" @click="ir(opcion.url)">
@@ -15,26 +15,26 @@
         
       </v-col>
     </v-row>
+
   </div>
 </template>
 
 <script>
-  export default {
-    name: 'Home',
-    components:{
-    },
+export default {
+    name:'Dashboard',
+    components:{},
     data: () => ({
       opciones:[
         {
           id:1,
-          opcion:'Entrada',
-          url: '/entrada',
+          opcion:'Historial',
+          url: '/historial',
           img: require("../assets/img/fondoIngreso.svg")
         },
         {
           id:2,
-          opcion:'Salida',
-          url: '/salida',
+          opcion:'Operaciones',
+          url: '/operaciones',
           img: require("../assets/img/fondoSalida.svg")
         }
       ]
@@ -44,12 +44,13 @@
         this.$router.push(e)
       }
     },
-  }
+}
 </script>
+
 <style scoped>
 
 .v-card-w{
-  width: 450px !important;
+  width: 455px !important;
 }
 
 .img{
