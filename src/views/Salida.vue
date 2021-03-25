@@ -69,15 +69,11 @@ import API from '../apiSalida';
         opcion:'',
         variante:'',
         adv: true,
-        items: ['1ra salida','2da salida'],
         dismissSecs: 5,
         dismissCountDown: 0,
         showDismissibleAlert: false
       };
     },
-    // data: () => ({
-      
-    // }),
     methods: {
       reset() {
         this.$refs.form.reset()
@@ -100,18 +96,20 @@ import API from '../apiSalida';
       async submitForm(){
         const formData = new FormData();
         formData.append('cedula', this.cedula);
-        if(this.$refs.form.validate()){
-          const response = await API.addPost(formData);
-          if(response.message == 'Salida creada'){
-            this.adv = true;
-            this.nuevo();
-          } else {
-            this.adv = false;
-            this.nuevo()
+          if(this.$refs.form.validate()){
+            const response = await API.addPost(formData);
+            if(response.message == 'Salida creada'){
+              this.adv = true;
+              this.nuevo();
+              this.reset();
+            } else {
+              this.adv = false;
+              this.nuevo()
+              this.reset();
+            }
           }
-        }
       }
-
+    
     },
   }
 </script>

@@ -1,5 +1,5 @@
 import axios from 'axios';
-const url = 'http://localhost:5000/api/post';
+const url = 'http://localhost:5000/api/entrada';
 
 export default class API {
     // Muestra las entradas

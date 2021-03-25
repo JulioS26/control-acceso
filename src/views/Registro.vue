@@ -4,29 +4,30 @@
         <v-row>
             <v-col cols="12" sm="4"  md="6" class="c-form offset-sm-4  offset-md-3">
 
-                <v-card class="pa-5">
-                      <v-card-title>Agregar nuevo post</v-card-title>
+                <v-form ref="form" @submit.prevent="submitForm" v-model="valid" lazy-validation class="bg-forms" enctype="multipart/form-data">
+                    <h1 class="titulo-form">Entrada</h1>
 
-                      <v-divider></v-divider>
+                    <v-text-field v-model="cedula" :counter="8" :rules="cedulaRules" label="Cedula" required></v-text-field>
+                    <!-- <v-text-field type="password" v-model="clave" :counter="30" :rules="claveRules" label="Contraseña" required></v-text-field> -->
+                    <!-- <v-select :items="items" label="Opciones" v-model="opcion"></v-select> -->
+          
+                    <v-btn type="submit" :disabled="!valid" color="info" class="mr-2">
+                        Registrar
+                    </v-btn>
+          
+                    <v-btn color="error" class="mr-4" @click="reset">
+                        Borrar formulario
+                    </v-btn>
+                </v-form>
 
-                      <v-form ref="form" @submit.prevent="submitForm" class="pa-5" enctype="multipart/form-data">
-                      
-                        <v-text-field label="Titulo" v-model="post.title" prepend-icon="mdi-note" :rules="rules"></v-text-field>
-                        <v-text-field label="Categoria" v-model="post.category" prepend-icon="mdi-view-list" :rules="rules"></v-text-field>
+                
 
-                        <v-textarea label="Contenido" v-model="post.content" prepend-icon="mdi-note-plus" :rules="rules"></v-textarea>
-
-                        <v-file-input @change="selectFile" :rules="rules" show-size counter multiple label="Seleccionar imagen"></v-file-input>
-
-                        <v-btn type="submit" class="mt-3" color="primary">Agg Post</v-btn>
-
-                      </v-form>
-                  </v-card>
+                
 
             </v-col>
         </v-row>
 
-        <!-- <div>
+        <div>
             <b-alert
                 :show="dismissCountDown"
                 dismissible
@@ -42,13 +43,13 @@
                     {{ cedula }} hubo falla en su registro. {{ dismissCountDown }}
                 </div>
             </b-alert>
-        </div> -->
+        </div>
 
     </div>
 </template>
 
 <script>
-import API from '../apiUser'
+import API from '../apiEntrada'
 export default {
     name:'Registro',
     data(){
@@ -57,25 +58,26 @@ export default {
                 (v) => !!v || 'Este campo es requerido'
             ],
             post:{
-                title:'',
-                category:'',
-                content:'',
-                image:''
+                // title:'',
+                cedula:'',
+                // category:'',
+                // content:'',
+                // image:''
             },
             image:'',
         };
     },
     methods:{
-        selectFile(file){
-
-            this.image = file[0];
-        },
+        // selectFile(file){
+        //     this.image = file[0];
+        // },
         async submitForm(){
             const formData = new FormData();
-            formData.append('image', this.image);
-            formData.append('title', this.post.title);
-            formData.append('category', this.post.category);
-            formData.append('content', this.post.content);
+            // formData.append('image', this.image);
+            // formData.append('title', this.post.title);
+            formData.append('cedula', this.post.cedula);
+            // formData.append('category', this.post.category);
+            // formData.append('content', this.post.content);
             if(this.$refs.form.validate()){
                 const response = await API.addPost(formData);
                 this.$router.push({name: 'Home', params: {message: response.message}});

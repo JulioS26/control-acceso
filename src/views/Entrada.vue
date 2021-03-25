@@ -8,8 +8,6 @@
                     <h1 class="titulo-form">Entrada</h1>
 
                     <v-text-field v-model="cedula" :counter="8" :rules="cedulaRules" label="Cedula" required></v-text-field>
-                    <!-- <v-text-field type="password" v-model="clave" :counter="30" :rules="claveRules" label="Contraseña" required></v-text-field> -->
-                    <!-- <v-select :items="items" label="Opciones" v-model="opcion"></v-select> -->
           
                     <v-btn type="submit" :disabled="!valid" color="info" class="mr-2">
                         Registrar
@@ -45,7 +43,7 @@
 </template>
 
 <script>
-import API from '../api';
+import API from '../apiEntrada';
 
     export default {
         name: 'Registro',
@@ -59,8 +57,6 @@ import API from '../api';
                 ],
                 opcion:'',
                 variante:'',
-                // select: null,
-                // advertencia: false,
                 adv: true,
                 items: ['1ra entrada','2da entrada'],
                 dismissSecs: 5,
@@ -68,9 +64,6 @@ import API from '../api';
                 showDismissibleAlert: false
             };
         },
-        // data: () => ({
-            
-        // }),
         methods: {
             reset() {
                 this.$refs.form.reset()
@@ -94,15 +87,16 @@ import API from '../api';
                 const formData = new FormData();
                 formData.append('cedula', this.cedula);
                 if(this.$refs.form.validate()){
-                    const response = await API.addPost(formData);
-                    if(response.message == 'Entrada creada'){
-                        this.adv = true;
-                        this.nuevo();
-                    } else {
-                        this.adv = false;
-                        this.nuevo()
-                    }
-                    // this.$router.push({name: 'Entrada', params: {message: response.message}});
+                        const response = await API.addPost(formData);
+                        if(response.message == 'Entrada creada'){
+                            this.adv = true;
+                            this.nuevo();
+                            this.reset();
+                        } else {
+                            this.adv = false;
+                            this.nuevo()
+                            this.reset();
+                        }
                 }
             }
 
