@@ -13,6 +13,9 @@ import Operaciones from '../views/Operaciones.vue'
 
 import Registro from '../views/Registro.vue'
 
+import Admin from '../views/Admin.vue'
+import DashboardAdmin from '../views/DashboardAdmin.vue'
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -47,7 +50,7 @@ const routes = [
     component: Historial
   },
   {
-    path: '/oepraciones',
+    path: '/operaciones',
     name: 'Operaciones',
     component: Operaciones
   },
@@ -55,6 +58,16 @@ const routes = [
     path: '/registro',
     name: 'Registro',
     component: Registro
+  },
+  {
+    path: '/admin',
+    name: 'Admin',
+    component: Admin
+  },
+  {
+    path:'/dashboard-admin',
+    name:'DashboardAdmin',
+    component: DashboardAdmin
   }
 ]
 

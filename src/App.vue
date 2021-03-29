@@ -1,17 +1,17 @@
 <template>
   <v-app >
-    <MenuToggle/>
+    <!-- <MenuToggle/> -->
     <router-view />
     <!-- <Footer/> -->
   </v-app>
 </template>
 <script>
-import MenuToggle from './components/MenuToggle.vue'
+// import MenuToggle from './components/MenuToggle.vue'
 // import Footer from './components/Footer.vue'
 export default {
   name: 'App',
   components: {
-    MenuToggle,
+    // MenuToggle,
     // Footer
   },
   data: () => ({
