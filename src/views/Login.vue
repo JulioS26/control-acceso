@@ -9,12 +9,12 @@
 
           <v-text-field v-model="usuario" :counter="10" :rules="usuarioRules" label="Usuario" required></v-text-field>
 
-          <v-text-field type="password" v-model="clave" :counter="20" :rules="claveRules" label="Contraseña" required></v-text-field>
+          <v-text-field type="password" v-model="clave" :counter="8" :rules="claveRules" label="Contraseña" required></v-text-field>
 
           <!-- <v-select :items="items" label="Opciones"></v-select> -->
 
-          <v-btn :disabled="!valid" color="info" class="mr-2" @click="nuevo()">
-            Registrar
+          <v-btn :disabled="!valid" color="info" class="mr-2" @click="login()">
+            Entrar
           </v-btn>
 
           <v-btn color="error" class="mr-4" @click="reset">
@@ -22,6 +22,7 @@
           </v-btn>
 
         </v-form>
+        {{posts}}
 
       </v-col>
 
@@ -56,6 +57,7 @@
 </template>
 
 <script>
+import API from '../apiUsuario'
 
   export default {
     name: 'Login',
@@ -69,14 +71,18 @@
       clave:'',
       claveRules: [
         v => !!v || 'La contraseña es requerida',
-        v => (v && v.length >= 10 && v.length <= 20) || 'El documento debe tener entre 10-20 caracteres',
+        v => (v && v.length >= 8 && v.length <= 20) || 'El documento debe tener entre 10-20 caracteres',
       ],
       variante:'',
       adv: true,
       dismissSecs: 5,
       dismissCountDown: 0,
-      showDismissibleAlert: false
+      showDismissibleAlert: false,
+      posts:[]
     }),
+    async created(){
+        this.posts = await API.getAllPost();
+    },
     methods: {
       reset() {
         this.$refs.form.reset()
@@ -89,19 +95,44 @@
         this.dismissCountDown = this.dismissSecs
       },
       nuevo(){
-       this.showAlert()
-       if(this.adv){
-       this.variante = 'success'
+      this.showAlert()
+      if(this.adv){
+        this.variante = 'success'
 
-       setTimeout(function(){
-        this.$router.push('/dashboard'),
-        console.log('entro')
-       },4000);
-       } else {
+        setTimeout(function(){
+          console.log('entro')
+        },4000);
+      } else {
        this.variante = 'danger'
        }
        
-      }
+      },
+      login(){
+        
+        // for (var i = 0; i >= this.posts.length; i++) {
+        //   if(this.usuario == this.posts[i].usuario && this.clave == this.posts[i].clave){
+        //     this.adv = true
+        //   } else {
+        //     this.adv = false
+        //   }
+        // }
+        
+
+        
+
+        if(
+          this.usuario == 'asalas' && this.clave == 'armalot123456'
+
+
+          ){
+          this.adv = true;
+          console.log(this.posts.length)
+          console.log(this.posts[0].usuario)
+        } else {
+          this.adv = false
+        }
+        this.nuevo()
+      },
     },
   }
 </script>
