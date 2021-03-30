@@ -47,7 +47,6 @@
           </v-btn>
 
         </v-form>
-        {{posts}}
 
       </v-col>
 

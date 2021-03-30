@@ -57,49 +57,46 @@
                 <v-card-text>
                     <div align="center">Actualizar</div>
 
-                    <v-text-field v-model="DireccionPartida" :rules="DireccionReglas" label="Ingrese la cedulad el trabajador" prepend-icon="mdi-account-key"></v-text-field>
+                  <v-card
+                    class="mx-auto"
+                    max-width="500"
+                    v-for="post in postsEntrada"
+                    :key="post._id"
+                    >
+                    <v-list subheader v-if="listado">
+                        <v-subheader>Lista</v-subheader>
 
-                    <v-menu ref="startMenu" v-model="startMenu" :close-on-content-click="false" :nudge-right="40" :return-value.sync="start" transition="fab-transition" min-width="290px" offset-y>
-                                <template v-slot:activator="{ on, attrs }">
-                                    <v-text-field v-model="start" class="mt-3" label="Fecha" prepend-icon="mdi-calendar" dense readonly outlined hide-details v-bind="attrs" v-on="on"></v-text-field>
-                                </template>
-                                <v-date-picker v-model="start" no-title scrollable>
-                                    <v-spacer></v-spacer>
-                                    <v-btn text color="primary" @click="startMenu = false">
-                                        Cancel
-                                    </v-btn>
-                                    <v-btn text color="primary" @click="$refs.startMenu.save(start)">
-                                        OK
-                                    </v-btn>
-                                </v-date-picker>
-                            </v-menu>
+                        <v-list-item>
+                          
 
-                            <v-select :items="items" label="Opciones" v-model="opcion"></v-select>
+                          <v-list-item-content>
+                            <v-list-item-title v-text="post.cedula"></v-list-item-title>
+                            <v-list-item-title v-text="post.created.substr(0,10)"></v-list-item-title>
+                          </v-list-item-content>
+                          <v-btn @click="actualizarPo(post._id)">Actualizar</v-btn>
+                          
+                        </v-list-item>
+                    </v-list>
+                  </v-card>
 
-                            <v-menu ref="startMenu" v-model="timetMenu" :close-on-content-click="false" :nudge-right="40" :return-value.sync="start" transition="fab-transition" min-width="290px" offset-y>
-                                <template v-slot:activator="{ on, attrs }">
-                                    <v-text-field v-model="time" class="mt-3" label="Hora" prepend-icon="mdi-clock" dense readonly outlined hide-details v-bind="attrs" v-on="on"></v-text-field>
-                                </template>
-                                <v-time-picker v-model="time" no-title scrollable>
-                                    <v-spacer></v-spacer>
-                                    <v-btn text color="primary" @click="startMenu = false">
-                                        Cancel
-                                    </v-btn>
-                                    <v-btn text color="primary" @click="$refs.startMenu.save(start)">
-                                        OK
-                                    </v-btn>
-                                </v-time-picker>
-                            </v-menu>
+                    <v-form ref="form" @submit.prevent="updateForm" v-model="valid" lazy-validation class="bg-forms" enctype="multipart/form-data">
+
+                    <v-text-field v-model="cedula" :counter="8" :rules="cedulaRules" label="Cedula" required></v-text-field>
+          
+                    <v-btn type="submit" :disabled="!valid" color="info" class="mr-2">
+                        Actualizar
+                    </v-btn>
+          
+                    <v-btn color="error" class="mr-4" @click="resetear()">
+                        Resetear
+                    </v-btn>
+                </v-form>
 
 
 
                     
                 </v-card-text>
-                <v-card-actions>
-                    <v-btn text color="deep-purple accent-4" @click="nuevo">
-                        Actualizar
-                    </v-btn>
-                </v-card-actions>
+                
             </v-card>
 
             <b-alert
@@ -111,10 +108,10 @@
               class="arriba"
             >
               <div v-if="advActualizar">
-               Registro {{ cedula }} de la {{opcion}} fue exitoso. {{ dismissCountDown }}
+               Su actualizacion fue exitosa. {{ dismissCountDown }}
               </div>
               <div v-else>
-               {{ cedula }} hubo falla en su registro {{opcion}}. {{ dismissCountDown }}
+               Hubo error en su actualizacion. {{ dismissCountDown }}
               </div>
             </b-alert>
 
@@ -130,38 +127,48 @@
             
             <v-card class="mx-auto" max-width="344">
                 <v-card-text>
-                    <div align="center">Actualizar</div>
+                    <div align="center">Eliminar</div>
 
-                    <v-text-field v-model="DireccionPartida" :rules="DireccionReglas" label="Ingrese la cedulad el trabajador" prepend-icon="mdi-account-key"></v-text-field>
+                    <v-card
+                      class="mx-auto"
+                      max-width="344"
+                      outlined
+                      v-for="post in postsEntrada"
+                      :key="post._id"
+                    >
+                      <v-list-item three-line>
+                        <v-list-item-content>
+                          <div class="overline mb-4">
+                            {{post.cedula}}
+                          </div>
+                          <v-list-item-title class="headline mb-1">
+                            {{post.created.substr(0,10)}}
+                          </v-list-item-title>
+                        </v-list-item-content>
 
-                    <v-menu ref="startMenu" v-model="startMenu" :close-on-content-click="false" :nudge-right="40" :return-value.sync="start" transition="fab-transition" min-width="290px" offset-y>
-                                <template v-slot:activator="{ on, attrs }">
-                                    <v-text-field v-model="start" class="mt-3" label="Fecha" prepend-icon="mdi-calendar" dense readonly outlined hide-details v-bind="attrs" v-on="on"></v-text-field>
-                                </template>
-                                <v-date-picker v-model="start" no-title scrollable>
-                                    <v-spacer></v-spacer>
-                                    <v-btn text color="primary" @click="startMenu = false">
-                                        Cancel
-                                    </v-btn>
-                                    <v-btn text color="primary" @click="$refs.startMenu.save(start)">
-                                        OK
-                                    </v-btn>
-                                </v-date-picker>
-                            </v-menu>
+                        
+                      </v-list-item>
 
-                            <v-select :items="items" label="Opciones" v-model="opcion"></v-select>
+                      <v-card-actions>
+                        <v-btn
+                          outlined
+                          rounded
+                          text
+                          @click="removePost(post._id)"
+                        >
+                          Eliminar
+                        </v-btn>
+                      </v-card-actions>
+                    </v-card>
 
-                            
+                    
 
+
+                      
 
 
                     
                 </v-card-text>
-                <v-card-actions>
-                    <v-btn text color="deep-purple accent-4">
-                        Eliminar
-                    </v-btn>
-                </v-card-actions>
 
 
             </v-card>
@@ -174,11 +181,11 @@
               @dismiss-count-down="countDownChanged"
               class="arriba"
             >
-              <div v-if="advActualizar">
-               Registro {{ cedula }} de la {{opcion}} fue exitoso. {{ dismissCountDown }}
+              <div v-if="adv">
+               Eliminado con exito. {{ dismissCountDown }}
               </div>
               <div v-else>
-               {{ cedula }} hubo falla en su registro {{opcion}}. {{ dismissCountDown }}
+               Error al eliminar. {{ dismissCountDown }}
               </div>
             </b-alert>
 
@@ -192,6 +199,8 @@
 </template>
 
 <script>
+import ApiEntrada from '../apiEntrada';
+
 export default {
     name:'Operaciones',
     components:{},
@@ -201,7 +210,7 @@ export default {
       dismissSecs: 5,
       dismissCountDown: 0,
       showDismissibleAlert: false,
-      advActualizar:false,
+      adv:false,
       actualizar:false,
       eliminar:false,
       fav: true,
@@ -237,8 +246,23 @@ export default {
                     icon: 'mdi-account',
                     img: require("../assets/img/fondoMenuLogin.svg")
                     }
-                ]
+                ],
+                postsEntrada:[],
+                listado:true,
+                idd:'',
+                advActualizar:false,
+                cedula:'',
+                valid: true,
+                cedulaRules: [
+                    v => !!v || 'La cedula es requerida',
+                    v => (v && v.length >= 7 && v.length <= 8) || 'El documento debe tener 7-8 caracteres',
+                ],
+                variante:'',
     }),
+    async created(){
+        this.postsEntrada = await ApiEntrada.getAllPost();
+        // this.postsSalida = await ApiSalida.getAllPost();
+    },
     methods:{
       countDownChanged(dismissCountDown) {
           this.dismissCountDown = dismissCountDown
@@ -249,6 +273,12 @@ export default {
       nuevo(){
          this.showAlert()
          if(this.adv){
+         this.variante = 'success'
+         } else {
+         this.variante = 'danger'
+         }
+
+         if(this.advActualizar){
          this.variante = 'success'
          } else {
          this.variante = 'danger'
@@ -268,7 +298,37 @@ export default {
       },
       irMenu(e){
           this.$router.push(e), this.menu = false
-      }
+      },
+      async removePost(id){
+            const response = await ApiEntrada.deletePost(id);
+            if(response == 'Entrada eliminada'){
+              this.adv = true
+              nuevo()
+            }
+            
+      },
+      async updateForm(){
+            var id = this.idd
+            const formData = new FormData();
+            formData.append('cedula', this.cedula);
+            if(this.$refs.form.validate()){
+                const response = await ApiEntrada.updatePost(id, formData);
+                if(response == 'Entrada actualizada'){
+                  this.advActualizar = true
+                  console.log('entro en actualizacion')
+                  nuevo()
+                }
+            }
+        },
+        actualizarPo(id){
+          this.listado = false 
+          this.idd = id
+        },
+        resetear(){
+          this.cedula = '',
+          this.listado = true
+
+        }
     }
     
 }

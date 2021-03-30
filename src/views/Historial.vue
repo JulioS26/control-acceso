@@ -32,9 +32,9 @@
 
                     <v-text-field v-model="cedula" :rules="cedulaReglas" label="Ingrese la cedulad el trabajador" prepend-icon="mdi-account-key"></v-text-field>
 
-                    <v-select :items="items" label="Opciones" v-model="opcion"></v-select>
+                    <!-- <v-select :items="items" label="Opciones" v-model="opcion"></v-select> -->
 
-                    <div v-if="opcion == 'Fecha exacta'">
+                    <div>
                       <v-row>
                         <v-col cols="12" class="controls">
                             <v-menu ref="startMenu" v-model="startMenu" :close-on-content-click="false" :nudge-right="40" :return-value.sync="start" transition="fab-transition" min-width="290px" offset-y>
@@ -55,7 +55,7 @@
                       </v-row>
                     </div>
 
-                    {{cedula}} {{start}}
+                    
 
                     <!-- <div v-if="opcion == 'Entre fechas'">
                       <v-row>
@@ -112,17 +112,57 @@
             <v-card class="mx-auto" max-width="344">
                 <v-card-text>
                     <div align="center">Historial</div>
+                    <div v-if="message == 'Asistio'">
+                      {{message}}  {{horas}} horas de trabajo
+                    </div>
+                    <div v-if="message == 'Ausente'">
+                      {{message}} 
+                    </div>
 
                     
                     
                 </v-card-text>
-                <v-card-actions>
-                    <v-btn text color="deep-purple accent-4">
-                        Terminar
-                    </v-btn>
-                </v-card-actions>
             </v-card>
         </v-col>
+    </v-row>
+
+    <v-row justify="space-around">
+      <v-col cols="auto">
+      <v-dialog
+        transition="dialog-bottom-transition"
+        max-width="600"
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            color="primary"
+            v-bind="attrs"
+            v-on="on"
+          >Nomina</v-btn>
+        </template>
+        <template v-slot:default="dialog">
+          <v-card>
+            <v-card-text>
+
+              <v-text-field v-model="monto" label="Monto" prepend-icon="mdi-cash"></v-text-field>
+
+              {{montoTotal}}
+            </v-card-text>
+            <v-card-actions class="justify-end">
+              <v-btn @click="montoT()">
+                Cuenta
+              </v-btn>
+              <v-btn
+                text
+                @click="dialog.value = false"
+              >Cerrar</v-btn>
+              <v-btn @click="limpiar()">
+                Limpiar
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </template>
+      </v-dialog>
+    </v-col>
     </v-row>
 
   </div>
@@ -182,7 +222,14 @@ export default {
                     img: require("../assets/img/fondoMenuLogin.svg")
                     }
                 ],
-                message:''
+                message:'',
+                entrada:'',
+                salida:'',
+                horas:'',
+                messageT:false,
+                messageF:false,
+                monto:'',
+                montoTotal:''
     }),
     async created(){
         this.postsEntrada = await ApiEntrada.getAllPost();
@@ -193,29 +240,67 @@ export default {
           this.$router.push(e), this.menu = false
       },
       solicitud(){
-        
+      
+        var hora1;
 
         for (var i = 0; i <= this.postsEntrada.length; i++) {
           // console.log('entrooo')
-          var c = this.cedula
-          var cc = this.postsEntrada[i].cedula
-   
+          var c = this.cedula;
+          var cc = this.postsEntrada[i].cedula;
+          var en;
+          
+      
           if(c == cc && this.start == this.postsEntrada[i].created.substr(0,10)){
             
-            this.message = 'Asistio'
-            console.log('Asistio')
+            this.message = 'Asistio';
+            this.messageT = true;
+            hora1 = this.postsEntrada[i].created.substr(11,2);
+            hora1 = 24-hora1;
+            console.log(hora1)
+            this.entrada = hora1
+            this.salidas()
+            // console.log('Asistio')
           } else {
-            this.message = 'Negativo'
-            console.log('No asistio')
+            this.message = 'Ausente'
+            this.messageF = true;
+            // console.log('No asistio')
           }
         }
+        
 
-        console.log(this.postsEntrada[2].cedula)
-        console.log(this.postsEntrada[2].created.substr(0,10))
-        console.log(this.postsEntrada.length)
-        // console.log(pe[2].cedula)
-        // console.log(pe[2].created.substr(0,10))
+      },
+      salidas(){
+        var hora2;
+
+        for (var k = 0; k <= this.postsSalida.length; k++) {
+          // console.log('entrooo')
+          var ce = this.cedula
+          var cce = this.postsSalida[k].cedula
+   
+          if(ce == cce && this.start == this.postsSalida[k].created.substr(0,10)){
+            
+            hora2 = this.postsSalida[k].created.substr(11,2);
+            hora2 = 24-hora2;
+            console.log(hora2)
+            this.salida = hora2;
+            this.horas = this.entrada - this.salida;
+
+          } else {
+            // console.log('No asistio')
+          }
+        }
+      },
+      montoT(){
+        this.montoTotal = this.horas * this.monto;
+      },
+      limpiar(){
+        this.montoTotal = '',
+        this.horas = '',
+        this.monto = '',
+        this.cedula = '',
+        this.start = ''
       }
+      
     }
 }
 </script>
